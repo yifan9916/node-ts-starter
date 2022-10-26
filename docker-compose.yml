@@ -1,0 +1,39 @@
+version: '2.4'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/node/app
+      # hide the host node_modules from the container
+      # create an anonymous volume (empty volume)
+      # by putting a volume inside a bind mount
+      # when the container is running the node_modules in the /app folder will be empty
+      # forcing node to look up a directory for the modules
+
+      # will use host node_modules if this line is not present
+      - /node/app/node_modules
+    # healthcheck:
+    #   test: node healthcheck.js || exit 1
+    #   test: wget -q http://localhost:3000/healthz || exit 1
+    #   interval: 5s
+    # env_file:
+    #   - .env
+    # environment:
+    #   - DEBUG=express:*
+
+  # proxy:
+  #   image: nginx:alpine
+  #   ports:
+  #     - '8080:80'
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./nginx/conf.d:/etc/nginx/conf.d
+    # depends_on:
+    #   node:
+    #     condition: service_healthy
